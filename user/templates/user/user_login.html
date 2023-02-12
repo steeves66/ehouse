@@ -1,0 +1,45 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Ehouse Login {% endblock %}
+
+{% block content %}
+	
+<div class="hero is-fullheight">
+    <div class="hero-body is-justify-content-center is-align-items-center is-flex is-flex-direction-column">
+        <div class="columns is-flex is-flex-direction-column">
+            
+            <div class="has-text-centered column is-8">
+                {% include 'includes/messages.html' %}
+            </div>
+
+            <form action="{% url 'user-login' %}" method="POST" novalidate>
+				<div class="has-text-centered column is-8">
+					  <ion-icon name="person-add-sharp" size="large"></ion-icon>
+					  <p class="is-size-3 has-text-weight-bold">Welcome back</p>
+				</div>
+            {% csrf_token %}
+                <div class="column">
+                    <label for="id_username">Email or username</label>
+                    <input class="input is-dark" name="username" type="text" placeholder="Email or username" id="id_username">
+                </div>
+                <div class="column">
+                    <label for="id_password">Password</label>
+                    <input class="input is-dark" type="password" name="password" placeholder="Password" id="id_password">
+                    <a href="{% url 'user-password-forget' %}" class="is-size-7 has-text-dark has-text-weight-bold">forget password?</a>
+                </div>
+                <div class="column">
+                    <button class="button is-dark is-fullwidth" type="submit">Login</button>
+                </div>
+                <div class="has-text-centered">
+                    <p class="is-size-7">Don't have an account?<a href="{% url 'user-register' %}" class="has-text-dark has-text-weight-bold"> Sign up</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}
