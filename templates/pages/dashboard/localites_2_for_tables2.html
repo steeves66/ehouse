@@ -1,0 +1,71 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load django_tables2 %}
+
+{% block content %}
+
+  <div class="py-4">
+    <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+      <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+        <li class="breadcrumb-item">
+          <a href="#">
+            <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+              </path>
+            </svg>
+          </a>
+        </li>
+        <li class="breadcrumb-item"><a href="#">Localités</a></li>
+      </ol>
+    </nav>
+    <div class="d-flex justify-content-end w-100 flex-wrap">
+      <a href="{% url 'add_localite' %}" class="text-success me-3">
+        <button class="btn btn-success" type="button">Add</button>
+      </a>
+    </div>
+  </div>
+
+
+
+  {% render_table table %}
+{% comment %}   <div class="card border-0 shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-centered table-nowrap mb-0 rounded">
+          <thead class="thead-light">
+            <tr>
+              <th class="border-0 rounded-start">#</th>
+              <th class="border-0">Nom</th>
+              <th class="border-0">Type</th>
+              <th class="border-0">Path</th>
+              <th class="border-0">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for localite in localites%}
+            <tr>
+              <td><a href="#" class="text-primary fw-bold"></a> </td>
+              <td>{{ localite.nom }}</td>
+              <td>{{ localite.type_localite }}</td>
+              <td>{{ localite.concat_parent_fils_string }}</td>
+              <td class="text-success">
+                <a href="">
+                  <svg fill="red"  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-file-minus" viewBox="0 0 16 16">
+                    <path d="M5.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z"/>
+                    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                  </svg>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div> {% endcomment %}
+
+
+
+  {% endblock content %}

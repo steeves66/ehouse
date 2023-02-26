@@ -1,0 +1,207 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="py-4" id="main">
+    <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+      <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+        <li class="breadcrumb-item">
+          <a href="#">
+            <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+              </path>
+            </svg>
+          </a>
+        </li>
+        <li class="breadcrumb-item"><a href="#">Localités</a></li>
+      </ol>
+    </nav>
+    <div class="d-flex justify-content-between w-100 flex-wrap">
+      <div class="d-flex flex-column">
+        <form class="navbar-search form-inline" id="navbar-search-main" action="{% url 'search_localite' %}" method="POST">
+          {% csrf_token %}
+          <div class="input-group input-group-merge search-bar">
+            <input type="text" class="form-control" name="search" id="search" placeholder="Search"
+              aria-label="Search" aria-describedby="topbar-addon" autocomplete="off">
+            <button class="btn btn-primary" type="submit" id="inputGroupFileAddon04">Search</button>
+          </div>
+        </form>
+        <ul id="result" class="bg-white list-unstyled ps-2 rounded-3"></ul>
+      </div>
+      <a href="{% url 'add_localite' %}" class="text-success me-3">
+        <button class="btn btn-success" type="button">Add</button>
+      </a>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-centered table-nowrap mb-0 rounded">
+          <thead class="thead-light">
+            <tr>
+              <th class="border-0 rounded-start">#</th>
+              <th class="border-0">Nom</th>
+              <th class="border-0">Type</th>
+              <th class="border-0">Path</th>
+              <th class="border-0">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+          {% for localite in localites%}
+            <tr>
+              <td><a href="#" class="text-primary fw-bold">{{ forloop.counter }}</a> </td>
+              <td>{{ localite.nom }}</td>
+              <td>{{ localite.type_localite }}</td>
+              <td>{{ localite.concat_parent_fils_string }}</td>
+              <td class="text-success">
+                <div class="d-flex justify-content-between">
+                  <a href="{% url 'edit_localite' localite.pk %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                      <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                    </svg>
+                  </a>
+                  <a href="{% url 'edit_localite' localite.pk %}" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <svg fill="red"  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-minus" viewBox="0 0 16 16">
+                      <path d="M5.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z"/>
+                      <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                    </svg>
+                  </a>
+                  <!-- Modal -->
+                  <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="modal-default" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="h6 modal-title" id="exampleModalLabel">Modal title</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <p> Do you delete {{localite.nom}}</p>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                          <form id="delete-form" method="post" action="{% url 'delete_localite' localite.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ localite.id }}">
+                            <button type="submit" class="btn btn-primary">Delete</button>
+                          </form>
+                        </div>
+                       {% comment %}  <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary">Save changes</button>
+                        </div> {% endcomment %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-lg-12">
+            {% if page_obj.has_other_pages %}
+              <nav>
+                <ul class="pagination justify-content-center">
+                  {% if page_obj.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page=1">
+                        First
+                      </a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                        Previous
+                      </a>
+                    </li>
+                  {% endif %}
+  
+                  {% for page_number in page_obj.paginator.page_range %}
+                    {% if page_number <= page_obj.number|add:3 and page_number >= page_obj.number|add:-3 %}
+                      {% if page_obj.number == page_number %}
+                        <li class="page-item active">
+                          <a class="page-link" href="?page={{ page_number }}">
+                            {{ page_number }}
+                          </a>
+                        </li>
+                      {% else %}
+                        <li class="page-item">
+                          <a class="page-link" href="?page={{ page_number }}">
+                            {{ page_number }}
+                          </a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                  {% endfor %}
+  
+                  {% if page_obj.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                        Next
+                      </a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                        Last
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% endif %}
+    </div>
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  const search = document.querySelector('#search')
+  const result = document.querySelector('#result')
+
+  search.addEventListener('input', function(){
+    console.log(this.value)
+    data = get(this.value)
+  })
+
+  async function get(searchTerm){
+    if(searchTerm === ''){
+      result.innerHTML = ''
+    }
+    try{
+      query = searchTerm.trim()
+      const url = `${query}/`
+
+      const response = await fetch(url)
+      const data = await response.json()
+
+      let html = ''
+      data.forEach(res => {
+        html += `<li>${res.nom}</li>`
+      })
+      result.style.display = "relative"
+      result.style.cursor = "default"
+
+      result.innerHTML = html
+    } catch(error){
+      console.error(error)
+    }
+  }
+
+  result.addEventListener('click', function(event){
+    const setValue = event.target.innerText
+    search.value = setValue
+    this.innerHTML = ''
+  })
+
+  let main = document.querySelector('#main')
+  main.style.display = "relative"
+  main.style.zIndex = 3
+</script>
+{% endblock extra_js %}

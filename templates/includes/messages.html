@@ -1,0 +1,9 @@
+
+    <ul>
+        {% for message in messages %}
+            <li {% if message.tags %} class="notification is-{{ message.tags }} is-light"{% endif %}>
+                <button class="delete"></button>
+                {{ message.message }}
+            </li>
+        {% endfor %}
+    </ul>

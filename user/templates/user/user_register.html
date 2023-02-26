@@ -1,0 +1,84 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Ehouse Register an account {% endblock %}
+
+{% block content %}
+
+      <div class="hero is-fullheight">
+        <div class="hero-body is-justify-content-center is-align-items-center is-flex is-flex-direction-column">
+          <div class="columns is-flex is-flex-direction-column column">
+			<form method="POST" action="{% url 'user-register'%}" novalidate>
+				<div class="has-text-centered column is-8">
+					  <ion-icon name="person-add-sharp" size="large"></ion-icon>
+					  <p class="is-size-3 has-text-weight-bold">Register your account</p>
+				</div>
+			{% csrf_token %}
+				<div class="column is-8">
+					<label for="id_last_name">Lastname</label>
+					{{form.last_name}}
+					{% if form.last_name.errors %}
+						<div class="help is-danger">{{ form.last_name.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="column is-8">
+					<label for="id_first_name">Firstname</label>
+					{{form.first_name}}
+					{% if form.last_name.errors %}
+						<div class="help is-danger">{{ form.first_name.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="column is-8">
+					<label for="id_username">Username</label>
+					{{form.username}}
+					{% if form.username.errors %}
+						<div class="help is-danger">{{ form.username.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="column is-8">
+					<label for="id_email">Email</label>
+					{{form.email}}
+					{% if form.email.errors %}
+						<div class="help is-danger">{{ form.email.errors }}</div>
+					{% endif %}
+				</div>
+					<div class="column is-8">
+					<label for="id_phone_number">Phone_number</label>
+					{{form.phone_number}}
+					{% if form.phone_number.errors %}
+						<div class="help is-danger">{{ form.phone_number.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="column is-8">
+					<label for="id_password">Password</label>
+					{{form.password}}
+					{% if form.password.errors %}
+						<div class="help is-danger">{{ form.password.errors }}</div>
+					{% endif %}
+				</div>
+
+				<div class="column is-8">
+					<label for="id_password">Confirm password</label>
+					{{form.confirm_password}}
+					{% if form.non_field_errors %}
+						<div class="help is-danger">{{ form.non_field_errors }}</div>
+					{% endif %}
+					<input type="checkbox">
+						I agree to the <a href="#" class="has-text-dark has-text-weight-bold">terms and conditions</a>
+				</div>
+
+				
+				<div class="column is-8 is-8">
+					<button class="button is-dark is-fullwidth" type="submit">Create an account</button>
+				</div>
+				<div class="has-text-centered column is-8">
+					<p> Already have an account?  <a href="{% url 'user-login' %}" class="has-text-dark has-text-weight-bold">Login</a></p>
+				</div>
+			</form>
+          </div>
+        </div>
+      </div>
+    
+{% endblock %}

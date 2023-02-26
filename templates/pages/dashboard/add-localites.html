@@ -1,0 +1,100 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+  <div class="py-2">
+    <div class="d-flex justify-content-between w-100 flex-wrap">
+      <div class="mb-3 mb-lg-0">
+        <h1 class="h4">Add Localite</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-2">
+    <div class="row px-8">
+      <div class="card">
+        <form action="{% url 'add_localite' %}" method="POST" novalidate>
+        {% csrf_token %}
+          <div class="row pt-4">
+            <div class="col">
+              <div class="mb-2">
+                <label for="formGroupExampleInput" class="form-label">Localité</label>
+                <input name="localite" type="text" class="form-control" id="formGroupExampleInput" placeholder="Localité">
+              </div>
+              <div class="mb-2">
+                <label class="my-1 me-2" for="type-localite">Type de localité</label>
+                <select name="type-localite" class="form-select" id="type-localite" aria-label="Default select example">
+                    <option selected><p class="fw-bold fst-italic">Type de localite</p></option>
+                    {% for tpl in typeLocalites %}
+                      <option value={{ tpl.id }} {% if tpl.id == localite.type_localite.id %} selected {% endif %}> {{ tpl.nom }} </option>
+                    {% endfor %}
+                </select>
+
+              </div>
+              <div class="mb-2">
+                <label class="my-1 me-2" for="dapt">Decoupage administratif parent type</label>
+                <select name="parent-localite-type" class="form-select" id="dapt" aria-label="Default select example">
+                  <option>Type de localité</option>
+                  {% for tpl in typeLocalites %}
+                    <option value={{ tpl.id }}>{{ tpl.nom }}</option>
+                  {% endfor %}
+                </select>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label class="my-1 me-2" for="dap">Decoupage administratif parent</label>
+                <div class="col">
+                  <select name="parent-localite-id" class="form-select" id="dap" aria-label="Default select example">
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="submit_btn">
+            <div class="card-body">
+              <button type="submit" name="_save" class="btn btn-sm btn-primary">Save</button>
+              {% comment %} 
+              <button type="submit" name="_addanother" class="btn btn-sm btn-info">Save and add another</button>
+              <button type="submit" name="_continue" class="btn btn-sm btn-warning">Save and continue editing</button>  
+              {% endcomment %}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function() {
+    $('#dap').select2({
+      theme: 'bootstrap-5'
+    });
+  });
+
+  $('#dapt').on('change', function() {
+    var model = $(this).val()
+    $('#dap').html('<option value="">-- Choix localite --</option>')
+    if (model != '') {
+      $.ajax({
+        url: "{% url 'get_localite_parent' %}",
+        type: 'POST',
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}', model: model},
+        dataType: 'json',
+        success:function(response) {
+          var len = response.length;
+          for (var i = 0; i < len; i++) {
+            var id = response[i]['id'];
+            var nom = response[i]['nom'];
+            var option = "<option value='" + id + "'>" + nom + "</option>"; 
+            $("#dap").append(option); 
+          }
+        }
+      });
+    }
+});
+</script>
+{% endblock extra_js %}
